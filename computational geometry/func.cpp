@@ -1,10 +1,10 @@
 #include "func.h"
 
-bool xuly1a(string fi, string fo)
+bool xuly1(string fi, string fo)
 {
 	vector<Segment> data;
 	vector<int>result;
-	if (!read1a(fi, data))return false;
+	if (!read1(fi, data))return false;
 
 	int i = 0;
 	while (i < data.size())
@@ -19,25 +19,73 @@ bool xuly1a(string fi, string fo)
 		i += 2;
 	}
 
-
-	if (!write1a(fo, result))return false;
+	if (!write1(fo, result))return false;
 	data.clear();
 	result.clear();
+
 	return true;
 }
 
-bool xuly1b(string fi, string fo)
+bool xuly2(string fi, string fo)
 {
 	Point p;
 	vector<Segment> datSeg;
 	vector<Point> datPt;
 	vector<Point> result;
-	if (!read1b(fi, datSeg, datPt)) return false;
+
+	if (!read2(fi, datSeg, datPt)) return false;
+
 	for (int i = 0; i < datPt.size(); i++)
-		result.push_back(project(datSeg[0], datPt[i]));
-	if (!write1b(fo, result)) return false;
+		result.push_back(project(datPt[i], datSeg[0]));
+	
+	if (!write2(fo, result)) return false;
 	result.clear();
 	datPt.clear();
+
 	return true;
 }
+
+bool xuly3(string fi, string fo)
+{
+	Point p;
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<Point> result;
+
+	if (!read2(fi, datSeg, datPt)) return false;
+
+	for (int i = 0; i < datPt.size(); i++)
+		result.push_back(reflect(datPt[i], datSeg[0]));
+
+	if (!write2(fo, result)) return false;
+	result.clear();
+	datPt.clear();
+
+	return true;
+}
+
+bool xuly4(string fi, string fo)
+{
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<double>result;
+	if (!read4(fi, datSeg, datPt))return false;
+	for (int i = 0; i < datSeg.size() - 1; i += 2)
+		result.push_back(getDistance(datSeg[i], datSeg[i + 1]));
+	if (!write4(fo, result))return false;
+	return true;
+}
+
+bool xuly5(string fi, string fo)
+{
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<int>result;
+	if (!read2(fi, datSeg, datPt))return false;
+	for (int i = 0; i < datPt.size(); i++)
+		result.push_back(ccw(datPt[i], datSeg[0]));
+	if (!write1(fo, result))return false;
+	return true;
+}
+
 

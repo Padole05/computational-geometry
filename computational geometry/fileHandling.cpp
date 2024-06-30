@@ -1,7 +1,7 @@
 #include "fileHandling.h"
 
-//bool readPoint()
-bool read1a(string fileName, vector<Segment>& Data)
+
+bool read1(string fileName, vector<Segment>& Data)
 {
 	int q = 0; //number of pairs to compare || num lines to read
 	// Creation of ifstream class object to read the file
@@ -68,7 +68,7 @@ bool read1a(string fileName, vector<Segment>& Data)
 	return true;
 }
 
-bool write1a(string fileName, vector<int>& result)
+bool write1(string fileName, vector<int>& result)
 {
 	ofstream fout;
 	fout.open(fileName);
@@ -79,7 +79,6 @@ bool write1a(string fileName, vector<int>& result)
 		return false;
 	}
 
-	if (result.size() <= 0)return true;
 	for (int i = 0; i < result.size(); i++)
 		fout << result[i] << endl;
 
@@ -123,30 +122,56 @@ Point read1PointPerLine(istringstream& ss)
 	return p;
 }
 
-bool read1b(string fn, vector<Segment>& datSeg, vector<Point>& datPt)
+bool readPointsLine(vector<Point>& datPt, int n, istringstream& ss)
+{
+	Point p;
+	string pos;
+
+	for (int i = 0; i < n; i++)
+	{
+		//read x
+		getline(ss, pos, ' ');
+		p.x = stod(pos);
+		//read y
+		getline(ss, pos, ' ');
+		p.y = stod(pos);
+		datPt.push_back(p);
+	}
+	return true;
+}
+
+bool readLinesPoints(vector<Point>& datPt,int n, int q, ifstream& fin, string& line)
+{
+	for (int i = 0; i < q; i++)
+	{
+		getline(fin, line);
+		istringstream ss(line);
+		readPointsLine(datPt, n, ss);
+	}
+	return true;
+}
+
+
+bool read2(string fn, vector<Segment>& datSeg, vector<Point>& datPt)
 {
 	ifstream fin;
 	fin.open(fn);
 	if (!fin.is_open()) { cout << "error open file1\n"; return false; }
 
 	string line;
-	string pos;
 
 	getline(fin, line);
 	istringstream ss(line);
 
-	//push s to data
+	//read 1 line of segment, push s to data
 	datSeg.push_back(read1SegmentPerLine(ss));
 
 	int q;
 	getline(fin, line);
 	q = stoi(line);
-	for (int i = 0; i < q; i++)
-	{
-		getline(fin, line);
-		istringstream ss(line);
-		datPt.push_back(read1PointPerLine(ss));
-	}
+	//read q lines, 1p/line
+	readLinesPoints(datPt,1, q, fin, line);
+
 	fin.close();
 	return true;
 }
@@ -156,7 +181,7 @@ void write1PointPerLine(Point& p, ofstream& fout)
 	fout << p.x << ' ' << p.y << endl;
 }
 
-bool write1b(string fn, vector<Point>& result)
+bool write2(string fn, vector<Point>& result)
 {
 	ofstream fout;
 	fout.open(fn);
@@ -166,28 +191,65 @@ bool write1b(string fn, vector<Point>& result)
 		return false;
 	}
 
-	if (result.size() <= 0)return true;
+	if (result.size() <= 0)return false;
 	for (int i = 0; i < result.size(); i++)
 		write1PointPerLine(result[i], fout);
+	fout.close();
 	return true;
 }
 
-bool read1c(string fn, vector<Segment>& datSeg, vector<Point>& datPt)
+bool readSegsFromPoints(vector<Segment>& datSeg, vector<Point>& datPt, int start, int end)
+{
+	if (end<=start)return false;
+
+	int i = start;
+	while (i < end)
+	{
+		Segment s(datPt[i], datPt[i + 1]);
+		datSeg.push_back(s);
+		i += 2;
+	}
+	/*for (i = 0; i < datSeg.size(); i++)
+		cout << datSeg[i].p1.x << ' ' << datSeg[i].p1.y <<' '<< datSeg[i].p2.x << ' ' << datSeg[i].p2.y << endl;*/
+
+	return true;
+}
+
+bool read4(string fn, vector<Segment>& datSeg, vector<Point>& datPt)
 {
 	ifstream fin;
 	fin.open(fn);
 	if (!fin.is_open()) { cout << "error open file1\n"; return false; }
 
 	string line;
-	string pos;
-
+	int q;
 	getline(fin, line);
-	istringstream ss(line);
+	q = stoi(line);
 
-	//push s to data
-	datSeg.push_back(read1SegmentPerLine(ss));
+	readLinesPoints(datPt, 4, q, fin, line);//checked
+	readSegsFromPoints(datSeg, datPt, 0, datPt.size() - 1);//checked
+	fin.close();
+	return false;
+}
 
+bool write4(string fileName, vector<double>& result)
+{
+	ofstream fout;
+	fout.open(fileName);
 
+	if (!fout.is_open())
+	{
+		cout << "error open close file\n";
+		return false;
+	}
+
+	int n = result.size();
+	for (int i = 0; i < n; i++)
+		fout << result[i] << endl;
+
+	fout.close();
 	return true;
 }
+
+
 
