@@ -20,9 +20,9 @@ bool xuly1(string fi, string fo)
 	}
 
 	if (!write1(fo, result))return false;
+	
 	data.clear();
 	result.clear();
-
 	return true;
 }
 
@@ -39,9 +39,10 @@ bool xuly2(string fi, string fo)
 		result.push_back(project(datPt[i], datSeg[0]));
 	
 	if (!write2(fo, result)) return false;
+	
 	result.clear();
+	datSeg.clear();
 	datPt.clear();
-
 	return true;
 }
 
@@ -58,9 +59,10 @@ bool xuly3(string fi, string fo)
 		result.push_back(reflect(datPt[i], datSeg[0]));
 
 	if (!write2(fo, result)) return false;
+	
 	result.clear();
+	datSeg.clear();
 	datPt.clear();
-
 	return true;
 }
 
@@ -69,10 +71,17 @@ bool xuly4(string fi, string fo)
 	vector<Segment> datSeg;
 	vector<Point> datPt;
 	vector<double>result;
+
 	if (!read4(fi, datSeg, datPt))return false;
+	
 	for (int i = 0; i < datSeg.size() - 1; i += 2)
 		result.push_back(getDistance(datSeg[i], datSeg[i + 1]));
+	
 	if (!write4(fo, result))return false;
+	
+	result.clear();
+	datSeg.clear();
+	datPt.clear();
 	return true;
 }
 
@@ -81,11 +90,64 @@ bool xuly5(string fi, string fo)
 	vector<Segment> datSeg;
 	vector<Point> datPt;
 	vector<int>result;
+	
 	if (!read2(fi, datSeg, datPt))return false;
+	
 	for (int i = 0; i < datPt.size(); i++)
 		result.push_back(ccw(datPt[i], datSeg[0]));
+	
 	if (!write1(fo, result))return false;
+	
+	result.clear();
+	datSeg.clear();
+	datPt.clear();
 	return true;
+}
+
+bool xuly6(string fi, string fo)
+{
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<int>result;
+	
+	if (!read4(fi, datSeg, datPt))return false;
+	
+	for (int i = 0; i < datSeg.size() - 1; i += 2)
+		result.push_back(intersect(datSeg[i], datSeg[i + 1]));
+	
+	if (!write1(fo, result))return false;
+	
+	result.clear();
+	datSeg.clear();
+	datPt.clear();
+	return true;
+}
+
+bool xuly7(string fi, string fo)
+{
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<Point>result;
+	
+	if (!read4(fi, datSeg, datPt))return false;
+	
+	for (int i = 0; i < datSeg.size() - 1; i += 2)
+		result.push_back(crossPoint(datSeg[i], datSeg[i + 1]));
+	
+	if (!write2(fo, result))return false;
+	
+	result.clear();
+	datSeg.clear();
+	datPt.clear(); 
+	return true;
+}
+
+bool xuly8(string fi, string fo)
+{
+	vector<Segment> datSeg;
+	vector<Point> datPt;
+	vector<Point>result;
+	double r;
 }
 
 
