@@ -144,10 +144,50 @@ bool xuly7(string fi, string fo)
 
 bool xuly8(string fi, string fo)
 {
-	vector<Segment> datSeg;
+	vector<Line> datL;
+	vector<Circle> datC;
+	vector<Segment>result;
+
+	if (!read8(fi,datL,datC))return false;
+
+	int i;
+	for(i=0;i<datL.size();i++)
+		result.push_back(getCrossPts(datC[0], datL[i]));
+
+	if (!write8(fo, result))return false;
+
+	result.clear();
+	datL.clear();
+	datC.clear();
+	return true;
+}
+
+bool xuly9(string fi, string fo)
+{
+	vector<Circle> datC;
+	vector<Segment>result;
+	if (!read9(fi, datC))return false;
+
+	result.push_back(getCrossPts(datC[0], datC[1]));
+
+	if (!write8(fo, result))return false;
+
+	result.clear();
+	datC.clear();
+	return true;
+}
+
+bool xuly10(string fi, string fo)
+{
+	vector<Poligon>datPlg;
 	vector<Point> datPt;
-	vector<Point>result;
-	double r;
+	vector<int>result;
+
+	if (!read10(fi, datPlg,datPt))return false;
+
+
+
+	return false;
 }
 
 

@@ -8,13 +8,29 @@
 #define EPS (1e-10)	//dung sai min
 #define equals(a,b) (fabs(a-b)<EPS) //a==b if |a-b| < dung sai
 
+//clock-directions, human POV
+
+//v(L)_base(R)
 static const int COUNTER_CLOCKWISE = 1;
+//base(L)_v(R)
 static const int CLOCKWISE = -1;
+//v=-k*base (k>0)
 static const int ONLINE_BACK = 2;
+//0<=v<=base
 static const int ONLINE_FRONT = -2;
+//base<v
 static const int ON_SEGMENT = 0;
 
+
+//status point vs shape
+typedef enum Contains{OUT,ON,IN};
+
+
 class Segment;
+
+
+
+
 
 //1
 // _________POINT
@@ -31,14 +47,14 @@ public:
 
 	//1. a) operators
 	//add
-	Point operator + (Point&p);
+	Point operator + (Point p);
 	//minus
-	Point operator - (Point&p);
+	Point operator - (Point p);
 	//scaling
 	Point operator*(double k);
 	Point operator/(double k);
 	//copy
-	Point operator=(Point& p);
+	Point operator=(Point p);
 	//smaller
 	bool operator < (const Point& p)const;
 	//equal
@@ -78,6 +94,7 @@ double getDistancePS(Point& p, Segment& s);
 
 
 
+
 //2
 // _________VECTOR
 typedef Point Vector;
@@ -86,12 +103,17 @@ typedef Point Vector;
 //2. a) recipes
 
 //norm = x^2 + y^2
-double norm(Vector&a);
+double norm(Vector a);
 
 //absolute - the physical length
-double abs(Vector &a);
+double abs(Vector a);
 
-Vector get(Point& p1, Point& p2);
+//absolute - the physical length
+double abs(Point& p1, Point& p2);
+
+//get vector(p1,p2)
+Vector vec(Point& p1, Point& p2);
+Vector vec(Segment& s);
 
 //2. b) calculations in relationships
 //dot product a.b=|a||b|cos(ab)
@@ -113,11 +135,24 @@ bool isOrthogonal(Vector& a, Vector& b);
 //check parallel vector a vs b
 bool isParallel(Vector& a, Vector& b);
 
-//clock-direction of (p1base,p) to (p1base,p2base)  
+//clock-direction of (p1base,p) to (p1base,p2base)
+//COUNTER_CLOCKWISE        1;
+//CLOCKWISE		-1;
+//ONLINE_BACK		 2;
+//ONLINE_FRONT		-2;
+//ON_SEGMENT		 0;
 int ccw(Point& p, Point& p1base, Point& p2base);
 
 //clock-direction of (base.p1,p) to (base.p1,base.p2)
+//COUNTER_CLOCKWISE        1;
+//CLOCKWISE		-1;
+//ONLINE_BACK		 2;
+//ONLINE_FRONT		-2;
+//ON_SEGMENT		 0;
 int ccw(Point& p, Segment &base);
+
+
+
 
 
 //3
@@ -140,6 +175,9 @@ public:
 
 //3. b) calculations in relationships
 
+//(cos(r)*a, sin(r)*a)
+Vector polar(double a, double r);
+
 //check square s1 vs s2
 bool isOrthogonal(Segment& s1, Segment& s2);
 
@@ -157,6 +195,7 @@ bool intersect(Segment& a, Segment& b);
 
 
 
+
 typedef Segment Line;
 
 //distance from Point p to Line l
@@ -164,16 +203,67 @@ double getDistancePL( Point& p, Line& l);
 
 
 
-//circle
+
+
+//4
+// ______CIRCLE
+//
 class Circle
 {
 public:
 	Point c;
 	double r;
+	//constructors
 	Circle() :c(), r(0) {}
 	Circle(Point c,double r):c(c),r(r){}
+
 };
 
 
-//da giac
+//4. a) calculations in relationships
+
+//get cross points of circle with line
+pair<Point, Point> getCrossPoints(Circle& o, Line& l);
+
+//get seg(p1,p2); (p1,p2)=circle cut line
+Segment getCrossPts(Circle& o, Line& l);
+
+//get seg(p1,p2); (p1,p2)=circle1 cut circle2
+Segment getCrossPts(Circle& o1, Circle& o2);
+
+//check if Line cut Circle
+bool intersect(Circle& o, Line& l);
+
+//check if Circle1 cut Circle2
+bool intersect(Circle& o1, Circle& o2);
+
+
+
+
+//5
+// ______POLIGON
+//points arranged counter-clockwisely 
 typedef vector<Point> Poligon;
+
+
+//5. a) calculations in relationships
+
+//check if poligon contains point
+//IN	2
+//ON	1
+//OUT	0
+int contains(Poligon& g, Point &p);
+
+//check if poligon contains point
+//IN	2
+//ON	1
+//OUT	0
+int contains(Point& p, Poligon& g);
+
+
+
+
+//angles
+
+//radian of angle xOp
+double arg(Vector p);

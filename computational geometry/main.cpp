@@ -16,6 +16,10 @@ const string fi7 = "crossPtInp.txt";
 const string fo7 = "crossPtOut.txt";
 const string fi8 = "crossCircleInp.txt";
 const string fo8 = "crossCircleOut.txt";
+const string fi9 = "O1xO2Inp.txt";
+const string fo9 = "O1xO2Out.txt";
+const string fi10 = "polygon_ptInp.txt";
+const string fo10 = "polygon_ptOut.txt";
 
 int main()
 {
@@ -26,6 +30,8 @@ int main()
 	//xuly5(fi5, fo5);
 	//xuly6(fi6, fo6);
 	//xuly7(fi7, fo7);
+	//xuly8(fi8, fo8);
+	//xuly9(fi9, fo9);
 
 	return 0;
 }
