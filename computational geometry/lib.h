@@ -243,12 +243,16 @@ bool intersect(Circle& o, Line& l);
 bool intersect(Circle& o1, Circle& o2);
 
 //get seg(p1,p2) = circle cut line
-//p2=(CH)+(base),p1=(CH)-(base)
-//base^2=r^2-CH^2, (base)=(p1p2)*base
+//p2=CH+base, p1=CH-base
+//|base|^2=r^2-CH^2, base=line*|base|
 //H=project C->line
 Segment getCrossPoints(Circle& o, Line& l);
 
-//get seg(p1,p2); (p1,p2)=circle1 cut circle2
+//get seg(p1,p2) = circle1 cut circle2
+//baseRad=<O,O1,O2>
+//a=<O2,O1,p2>
+//p2=O1+r1*cos(baseRad+a)
+//p1=O1+r1*cos(baseRad-a)
 Segment getCrossPts(Circle& o1, Circle& o2);
 
 

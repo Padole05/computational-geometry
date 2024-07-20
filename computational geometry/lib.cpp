@@ -231,14 +231,14 @@ Segment getCrossPoints(Circle& o, Line& l)
 	Segment rs(p1, p2);
 	return rs;
 }
-
+ 
 Segment getCrossPts(Circle& o1, Circle& o2)
 {
 	assert(intersect(o1, o2));
-	double d = abs(o1.c, o2.c);
-	double a = acos((o1.r + o1.r + d * d - o2.r * o2.r) / (2 * o1.r * d));
-	double t = arg(o2.c - o1.c);
-	return Segment(o1.c + polar(o1.r, t + a), o1.c + polar(o1.r, t - a));
+	double d = abs(o1.c - o2.c);
+	double a = acos((o1.r * o1.r + d * d - o2.r * o2.r) / (2 * o1.r * d));
+	double t = arg(o2.c - o1.c);//base rad
+	return Segment(o1.c + polar(o1.r, t - a), o1.c + polar(o1.r, t + a));
 }
 
 
