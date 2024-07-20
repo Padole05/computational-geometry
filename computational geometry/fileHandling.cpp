@@ -123,7 +123,7 @@ bool readLinesCircles(vector<Circle>& datC, int n, int q, ifstream& fin)
 	return true;
 }
 
-bool readPoligons(vector<Poligon>& datPlg, int n, ifstream& fin)
+bool readPoligons(Poligon& datPlg, int n, ifstream& fin)
 {
 	string line;
 	int np;
@@ -132,7 +132,7 @@ bool readPoligons(vector<Poligon>& datPlg, int n, ifstream& fin)
 	{
 		getline(fin, line);
 		np = stoi(line);
-		readLinesPoints(datPlg[i], 1, np, fin);
+		readLinesPoints(datPlg, 1, np, fin);
 	}
 	
 	return true;
@@ -300,7 +300,7 @@ bool read8(string fn, vector<Line>& datL, vector<Circle>& datC)
 	q = stoi(line);
 	
 	vector<Point> datPt;
-	readLinesPoints(datPt, 4, q, fin);//checked
+	readLinesPoints(datPt, 2, q, fin);//checked
 	readSegsFromPoints(datL, datPt, 0, datPt.size() - 1);//checked
 	
 	datPt.clear();
@@ -320,7 +320,7 @@ bool read9(string fn, vector<Circle>& datC)
 	return true;
 }
 
-bool read10(string fn, vector<Poligon>& datPlg, vector<Point>& datPt)
+bool read10(string fn, Poligon& datPlg, vector<Point>& datPt)
 {
 	ifstream fin;
 	fin.open(fn);

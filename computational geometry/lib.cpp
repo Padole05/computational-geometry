@@ -40,6 +40,21 @@ double Point::abs(){ return sqrt(norm());}
 
 //1. c) calculations in relationships
 
+double getDistance(Point& a, Point& b)
+{
+	Vector v = a - b;
+	return abs(v);
+}
+
+double getDistancePS(Point& p, Segment& s)
+{
+	Vector a = s.p2 - s.p1, b = p - s.p1;
+	if (dot(a, b) < 0.0)return abs(b);
+	Vector c = s.p1 - s.p2, d = p - s.p2;
+	if (dot(c, d))return abs(d);
+	return getDistancePL(p, s);
+}
+
 Point project(Point& p, Segment& s)
 {
 	Vector base = s.p2 - s.p1, v = p - s.p1;
@@ -67,20 +82,7 @@ Point crossPoint(Segment& a, Segment& b)
 	return a.p1 + r;
 }
 
-double getDistance(Point& a, Point& b)
-{
-	Vector v = a - b;
-	return abs(v);
-}
 
-double getDistancePS(Point& p, Segment& s)
-{
-	Vector a = s.p2 - s.p1, b = p - s.p1;
-	if (dot(a, b) < 0.0)return abs(b);
-	Vector c = s.p1 - s.p2, d = p - s.p2;
-	if (dot(c, d))return abs(d);
-	return getDistancePL(p,s);
-}
 
 
 
@@ -90,15 +92,18 @@ double getDistancePS(Point& p, Segment& s)
 //
  
 //2. a) recipes
+
+Vector vec(Point& p1, Point& p2) { return Vector(p2 - p1); }
+
+Vector vec(Segment& s) { return Vector(s.p2 - s.p1); }
+
 double norm(Vector a){	return a.x * a.x + a.y * a.y;}
 
 double abs(Vector a){ return sqrt(norm(a));}
 
 double abs(Point& p1, Point& p2){ return abs(vec(p1, p2));}
 
-Vector vec(Point& p1, Point& p2){ return Vector(p2-p1);}
 
-Vector vec(Segment&s){ return Vector(s.p2 - s.p1);}
 
 
 //2. b) calculations in relationships
@@ -155,30 +160,13 @@ Segment Segment::operator=(Segment& s)
 }
 
 
-Segment getCrossPts(Circle& o, Line& l)
-{
-	if (!intersect(o, l))return Segment();
-	Vector h = project(o.c, l);
-	Vector vl = vec(l);
-	double base = sqrt(o.r * o.r - norm(vec(o.c, h)));
-	Vector e = (vl / abs(vl)) * base;
-	Point p1 = h + e, p2 = h - e;
-
-	return Segment(p1,p2);
-}
-
-Segment getCrossPts(Circle& o1, Circle& o2)
-{
-	assert(intersect(o1, o2));
-	double d = abs(o1.c, o2.c);
-	double a = acos((o1.r + o1.r + d * d - o2.r * o2.r) / (2 * o1.r * d));
-	double t = arg(o2.c - o1.c);
-	return Segment(o1.c + polar(o1.r, t + a), o1.c + polar(o1.r, t - a));
-}
 
 Vector polar(double a, double r){ return Point(cos(r) * a, sin(r) * a);}
 
 //3. b) calculations in relationships
+
+
+
 bool isOrthogonal(Segment& s1, Segment& s2)
 {
 	Vector a = s1.p2 - s1.p1, b = s2.p2 - s2.p1;
@@ -220,17 +208,6 @@ double getDistancePL(Point& p, Line& l)
 
 //4. a) calculations in relationships
 
-pair<Point, Point> getCrossPoints(Circle& o, Line& l)
-{
-	assert(intersect(o, l));
-	Vector h = project(o.c, l);
-	Vector vl = vec(l);
-	double base = sqrt(o.r * o.r - norm(vec(o.c, h)));
-	Vector e = (vl / abs(vl)) * base;
-	Point p1 = h + e, p2 = h - e;
-	return make_pair(p1, p2);
-}
-
 bool intersect(Circle& o, Line& l)
 {
 	if (getDistancePL(o.c, l) > o.r)return false;
@@ -243,6 +220,38 @@ bool intersect(Circle& o1, Circle& o2)
 	return true;
 }
 
+Segment getCrossPoints(Circle& o, Line& l)
+{
+	assert(intersect(o, l));
+	Vector h = project(o.c, l);
+	Vector vl = l.p2 - l.p1;
+	double base = sqrt(o.r * o.r - norm(h - o.c));
+	Vector e = (vl / abs(vl)) * base;
+	Point p1 = h - e, p2 = h + e;
+	Segment rs(p1, p2);
+	return rs;
+}
+
+Segment getCrossPts(Circle& o1, Circle& o2)
+{
+	assert(intersect(o1, o2));
+	double d = abs(o1.c, o2.c);
+	double a = acos((o1.r + o1.r + d * d - o2.r * o2.r) / (2 * o1.r * d));
+	double t = arg(o2.c - o1.c);
+	return Segment(o1.c + polar(o1.r, t + a), o1.c + polar(o1.r, t - a));
+}
+
+
+
+
+
+//5
+// ______POLIGON
+//points arranged counter-clockwisely 
+
+
+//5. a) calculations in relationships
+
 int contains(Poligon& g, Point &p)
 {
 	int n = g.size();
@@ -254,8 +263,7 @@ int contains(Poligon& g, Point &p)
 		double c = cross(a, b);
 		if (abs(c) < EPS && dot(a, b) < EPS)return 1;
 		if (a.y > b.y)swap(a, b);
-		else
-			if (a.y < EPS && EPS<b.y && c>EPS)x = !x;
+		if (a.y < EPS && EPS<b.y && c>EPS)x = !x;
 	}
 
 	return (x ? 2 : 0);
@@ -263,17 +271,18 @@ int contains(Poligon& g, Point &p)
 
 int contains(Point& p, Poligon& g)
 {
-	int n = g.size();
-	Vector base;
-	int pos, result;
+	//int n = g.size();
+	//Vector base;
+	//int pos, result;
 
-	for (int i = 0; i < n-1; i++)
-	{
-		//base = g[i + 1] - g[i];
-		pos = ccw(p, g[i], g[i + 1]);
-		if (pos == ONLINE_FRONT)return ON;
-		if(pos==)
-	}
+	//for (int i = 0; i < n-1; i++)
+	//{
+	//	//base = g[i + 1] - g[i];
+	//	pos = ccw(p, g[i], g[i + 1]);
+	//	if (pos == ONLINE_FRONT)return ON;
+	//	if(pos==)
+	//}
+	return 0;
 }
 
 double arg(Vector p){return atan2(p.y, p.x);}

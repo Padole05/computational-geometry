@@ -72,6 +72,14 @@ public:
 
 //1. c) calculations in relationships
 
+//distance from 2 points; 
+// =|a,b|
+double getDistance(Point& a, Point& b);
+
+//distance from Point p to Segment s;
+//  =|p->projection|
+double getDistancePS(Point& p, Segment& s);
+
 //projection of Point p to Segment s; 
 // =s.p1+base^2.(p1,p)/(|base|^2)
 Point project(Point& p, Segment& s);
@@ -80,16 +88,10 @@ Point project(Point& p, Segment& s);
 //  =2(p,project)
 Point reflect(Point& p, Segment& s);
 
-//cross point of 2 intersect segments
+//point p = a cut b
+//(a1p/pa2)=(a1h1/a2h2) -> p
+//h1=a1 proj b, h2=a2 proj b
 Point crossPoint(Segment& a, Segment& b);
-
-//distance from 2 points; 
-// =|a,b|
-double getDistance(Point& a, Point& b);
-
-//distance from Point p to Segment s;
-//  =|p->projection|
-double getDistancePS(Point& p, Segment& s);
 
 
 
@@ -115,7 +117,9 @@ double abs(Point& p1, Point& p2);
 Vector vec(Point& p1, Point& p2);
 Vector vec(Segment& s);
 
+
 //2. b) calculations in relationships
+
 //dot product a.b=|a||b|cos(ab)
 double dot(Vector& a, Vector& base);
 
@@ -124,15 +128,19 @@ double dot(Vector& a, Vector& base);
 double cross(Vector& a, Vector& base);
 
 //check square vector a vs b
+//true (dot==0)
 bool isOrthogonal(Point& a1, Point& a2, Point& b1, Point& b2);
 
 //check parallel vector a(a1->a2) vs b(b1->b2)
+//true (cross==0)
 bool isParallel(Point& a1, Point& a2, Point& b1, Point& b2);
 
 //check square vector a vs b
+//true (dot==0)
 bool isOrthogonal(Vector& a, Vector& b);
 
 //check parallel vector a vs b
+//true (cross==0)
 bool isParallel(Vector& a, Vector& b);
 
 //clock-direction of (p1base,p) to (p1base,p2base)
@@ -179,18 +187,23 @@ public:
 Vector polar(double a, double r);
 
 //check square s1 vs s2
+//true (dot==0)
 bool isOrthogonal(Segment& s1, Segment& s2);
 
 //check s1 parallel s2
+//true (cross==0)
 bool isParallel(Segment& s1, Segment& s2);
 
 //distance between 2 segments
+//	return min(min(getDistancePS(a.p1, b), getDistancePS(a.p2, b)), min(getDistancePS(b.p1, a), getDistancePS(b.p2, a)));
 double getDistance(Segment& a, Segment& b);
 
 //check if seg(p1,p2) cut seg(p3,p4)
+//	return (ccw(p3, p1, p2) * ccw(p4, p1, p2) <= 0 && ccw(p1, p3, p4) * ccw(p2, p3, p4) <= 0);
 bool intersect(Point& p1, Point& p2, Point& p3, Point& p4);
 
 //check if 2 segments cut each other
+//	return (ccw(p3, p1, p2) * ccw(p4, p1, p2) <= 0 && ccw(p1, p3, p4) * ccw(p2, p3, p4) <= 0);
 bool intersect(Segment& a, Segment& b);
 
 
@@ -199,6 +212,7 @@ bool intersect(Segment& a, Segment& b);
 typedef Segment Line;
 
 //distance from Point p to Line l
+// =abs(p,proj)
 double getDistancePL( Point& p, Line& l);
 
 
@@ -222,20 +236,21 @@ public:
 
 //4. a) calculations in relationships
 
-//get cross points of circle with line
-pair<Point, Point> getCrossPoints(Circle& o, Line& l);
-
-//get seg(p1,p2); (p1,p2)=circle cut line
-Segment getCrossPts(Circle& o, Line& l);
-
-//get seg(p1,p2); (p1,p2)=circle1 cut circle2
-Segment getCrossPts(Circle& o1, Circle& o2);
-
 //check if Line cut Circle
 bool intersect(Circle& o, Line& l);
 
 //check if Circle1 cut Circle2
 bool intersect(Circle& o1, Circle& o2);
+
+//get seg(p1,p2) = circle cut line
+//p2=(CH)+(base),p1=(CH)-(base)
+//base^2=r^2-CH^2, (base)=(p1p2)*base
+//H=project C->line
+Segment getCrossPoints(Circle& o, Line& l);
+
+//get seg(p1,p2); (p1,p2)=circle1 cut circle2
+Segment getCrossPts(Circle& o1, Circle& o2);
+
 
 
 

@@ -30,7 +30,7 @@ bool readCirclesLine(vector<Circle>& datC, int n, istringstream& ss);
 bool readLinesCircles(vector<Circle>& datC, int n, int q, ifstream& fin);
 
 //read n poligons
-bool readPoligons(vector<Poligon>& datPlg, int n, ifstream& fin);
+bool readPoligons(Poligon& datPlg, int n, ifstream& fin);
 
 
 //1. b) write
@@ -72,7 +72,7 @@ bool read8(string fn, vector <Line>& datL, vector<Circle>& datC);
 bool read9(string fn, vector<Circle>& datC);
 
 //Poligon[ int n(l1), 1 pt/line (n lines)], int q(line n+2), 1 pt/line (q lines)
-bool read10(string fn, vector<Poligon>& datPlg, vector<Point>& datPt);
+bool read10(string fn, Poligon& datPlg, vector<Point>& datPt);
 
 
 //2. b) write

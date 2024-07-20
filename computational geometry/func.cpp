@@ -152,7 +152,7 @@ bool xuly8(string fi, string fo)
 
 	int i;
 	for(i=0;i<datL.size();i++)
-		result.push_back(getCrossPts(datC[0], datL[i]));
+		result.push_back(getCrossPoints(datC[0], datL[i]));
 
 	if (!write8(fo, result))return false;
 
@@ -179,15 +179,21 @@ bool xuly9(string fi, string fo)
 
 bool xuly10(string fi, string fo)
 {
-	vector<Poligon>datPlg;
+	Poligon datPlg;
 	vector<Point> datPt;
 	vector<int>result;
 
 	if (!read10(fi, datPlg,datPt))return false;
 
+	for (int i = 0; i < datPt.size(); i++)
+		result.push_back(contains(datPlg, datPt[i]));
 
+	if (!write1(fo, result))return false;
 
-	return false;
+	datPlg.clear();
+	datPt.clear();
+	result.clear();
+	return true;
 }
 
 
